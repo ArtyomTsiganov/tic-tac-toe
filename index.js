@@ -53,7 +53,7 @@ function smartAI() {
                 if(i === j) {
                     diags[0] += toAdd;
                 } 
-                if(j === n - i) {
+                if(j === n -1 - i) {
                     diags[1] += toAdd;
                 }
 
@@ -61,9 +61,7 @@ function smartAI() {
                     HasWon = true;
                     //renderSymbolInCell(player, i, j);
 
-                    setTimeout(function() {
-                        alert(`Победили ${player}`);
-                        }, 250);
+                    alert(`Победили ${player}`);
                     return;
                 }
 
@@ -91,7 +89,7 @@ function smartAI() {
         diags[0] += toAdd;
     } 
 
-    if(j_random === n - 1- i_random) {
+    if(j_random === n - 1 - i_random) {
         diags[1] += toAdd;
     }
 
@@ -99,9 +97,7 @@ function smartAI() {
 
     if (checkWinCondition()) {
         HasWon = true;
-        setTimeout(function() {
-                        alert(`Победили ${player}`);
-                        }, 250);
+        alert(`Победили ${player}`);
         return;
     } 
 }
@@ -135,11 +131,12 @@ function cellClickHandler (row, col) {
     }
     console.log(`Clicked on cell: ${row}, ${col}`);
 
+
     if(grid[row][col] !== EMPTY) {
         return;
     } 
-
     movesCount++;
+
     grid[row][col] = player;
     renderSymbolInCell(player, row, col);
     const toAdd = player === CROSS ? 1 : -1;
@@ -154,51 +151,16 @@ function cellClickHandler (row, col) {
 
     if(checkWinCondition()) {
         HasWon = true;
-        setTimeout(function() {
-                alert(`Победили ${player}`);
-                }, 250);
+        alert(`Победили ${player}`);
     } else {
         smartAI();
     }
-
     player = (player === CROSS) ? ZERO : CROSS;
 }
 
-
 function checkWinCondition() {
     if(movesCount === n * n) {
-        setTimeout(function() {
-            alert(`Победила Дружба!`);
-        }, 250);
-    }
-    for (let i = 0; i < n; i++) {
-        if (Math.abs(rows[i]) === n) {
-            paintWinnerDirection(Direction.ROW, i);
-            return true;
-        }
-        if (Math.abs(cols[i]) === n) {
-            paintWinnerDirection(Direction.COL, i);
-            return true;
-        }
-    }
-
-    if (Math.abs(diags[0]) === n) {
-        paintWinnerDirection(Direction.DIAG, 0);
-        return true;
-    }
-
-    if (Math.abs(diags[1]) === n) {
-        paintWinnerDirection(Direction.DIAG, 1);
-        return true;
-    }
-
-    return false;
-}
-function checkWinCondition() {
-    if(movesCount === n * n) {
-        setTimeout(function() {
-                alert('Победила Дружба!');
-                }, 250);
+        alert('Победила Дружба!');
         return false;
     }
 
