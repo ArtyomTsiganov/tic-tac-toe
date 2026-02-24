@@ -4,11 +4,12 @@ const EMPTY = ' ';
 let player = CROSS;
 let n = 3;
 let m = 3;
+let movesCount = 0;
 let grid = []
 
-for(let i = 0; i < rows; i++) {
+for(let i = 0; i < n; i++) {
     grid[i] = [];
-    for(let j = 0; j < cols; j++) {
+    for(let j = 0; j < m; j++) {
         grid[i][j] = EMPTY;
     }
 }
@@ -44,23 +45,34 @@ function cellClickHandler (row, col) {
     // Пиши код тут
     console.log(`Clicked on cell: ${row}, ${col}`);
     player = (player === CROSS) ? ZERO : CROSS;
+
+    if(grid[row][col] !== EMPTY) {
+        return;
+    } 
+
+    movesCount++;
+    grid[row][col] = player;
     renderSymbolInCell(player, row, col);
     const toAdd = player === CROSS ? 1 : -1;
     rows[row] += toAdd;
     cols[col] += toAdd;
     if(col === row) {
         diags[0] += toAdd;
-    } else if(col == 2 - row) {
+    } else if(col == n - 1 - row) {
         diags[1] += toAdd;
     }
 
-    if(checkWinCondition())
-    {
+    if(checkWinCondition()) {
         alert(player);
-    }
+    } 
 
 }
 function checkWinCondition() {
+    if(movesCount === m * n) {
+        alert('Победила Дружба!');
+        return false;
+    }
+
     for(const row of rows)
     {
         if(Math.abs(row) === 3)
