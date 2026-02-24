@@ -3,13 +3,18 @@ const ZERO = 'O';
 const EMPTY = ' ';
 let player = CROSS;
 
+const Direction = {
+    ROW: "ROW",
+    COL: "COL",
+    DIAG: "DIAG"
+}
+
 let n = parseInt(prompt("Введите число строк: "));
 
 let grid = []
 
 let movesCount = 0;
 let HasWon = false;
-
 
 let rows = new Array(n).fill(0)
 let cols = new Array(n).fill(0)
@@ -125,7 +130,6 @@ function cellClickHandler (row, col) {
         return;
     }
     console.log(`Clicked on cell: ${row}, ${col}`);
-    player = (player === CROSS) ? ZERO : CROSS;
 
     if(grid[row][col] !== EMPTY) {
         return;
@@ -139,7 +143,8 @@ function cellClickHandler (row, col) {
     cols[col] += toAdd;
     if(col === row) {
         diags[0] += toAdd;
-    } else if(col == n - 1 - row) {
+    } 
+    if(col == n - 1 - row) {
         diags[1] += toAdd;
     }
 
@@ -152,6 +157,34 @@ function cellClickHandler (row, col) {
         smartAI();
     }
 
+    player = (player === CROSS) ? ZERO : CROSS;
+}
+
+
+function checkWinCondition() {
+
+    for (let i = 0; i < n; i++) {
+        if (Math.abs(rows[i]) === n) {
+            paintWinnerDirection(Direction.ROW, i);
+            return true;
+        }
+        if (Math.abs(cols[i]) === n) {
+            paintWinnerDirection(Direction.COL, i);
+            return true;
+        }
+    }
+
+    if (Math.abs(diags[0]) === n) {
+        paintWinnerDirection(Direction.DIAG, 0);
+        return true;
+    }
+
+    if (Math.abs(diags[1]) === n) {
+        paintWinnerDirection(Direction.DIAG, 1);
+        return true;
+    }
+
+    return false;
 }
 function checkWinCondition() {
     if(movesCount === n * n) {
@@ -161,24 +194,57 @@ function checkWinCondition() {
         return false;
     }
 
-    for(const row of rows)
-    {
-        if(Math.abs(row) === n)
+    for (let i = 0; i < n; i++) {
+        if (Math.abs(rows[i]) === n) {
+            paintWinnerDirection(Direction.ROW, i);
             return true;
+        }
+        if (Math.abs(cols[i]) === n) {
+            paintWinnerDirection(Direction.COL, i);
+            return true;
+        }
     }
 
-    for(const col of cols)
-    {
-        if(Math.abs(col) === n)
-            return true;
+    if (Math.abs(diags[0]) === n) {
+        paintWinnerDirection(Direction.DIAG, 0);
+        return true;
     }
 
-    for(const diag of diags)
-    {
-        if(Math.abs(diag) === n)
-            return true;
+    if (Math.abs(diags[1]) === n) {
+        paintWinnerDirection(Direction.DIAG, 1);
+        return true;
     }
+
     return false;
+}
+
+function paintWinnerDirection(direction, idx) {
+    const winColor = "red";
+
+    if (direction === Direction.ROW) {
+        for (let col = 0; col < n; col++) {
+            renderSymbolInCell(grid[idx][col], idx, col, winColor);
+        }
+    }
+
+    if (direction === Direction.COL) {
+        for (let row = 0; row < n; row++) {
+            renderSymbolInCell(grid[row][idx], row, idx, winColor);
+        }
+    }
+
+    if (direction === Direction.DIAG) {
+
+        if (idx === 0) {
+            for (let i = 0; i < n; i++) {
+                renderSymbolInCell(grid[i][i], i, i, winColor);
+            }
+        } else {
+            for (let i = 0; i < n; i++) {
+                renderSymbolInCell(grid[i][n - 1 - i], i, n - 1 - i, winColor);
+            }
+        }
+    }
 }
 function renderSymbolInCell (symbol, row, col, color = '#333') {
     const targetCell = findCell(row, col);
@@ -198,7 +264,6 @@ function addResetListener () {
 }
 
 function resetClickHandler () {
-
     player = CROSS;
     movesCount = 0;
     HasWon = false;
@@ -207,7 +272,7 @@ function resetClickHandler () {
     diags.fill(0);
     fillGrid(EMPTY);
     renderGrid(n);
-    console.log('reset!');
+    alert('reset!');
 }
 
 function testWin () {
