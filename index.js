@@ -27,6 +27,77 @@ function startGame () {
     fillGrid(EMPTY);
 }
 
+function smartAI() {
+    player = (player === CROSS) ? ZERO : CROSS;
+    const toAdd = player === CROSS ? 1 : -1;
+    let i_random = -1, j_random = -1;
+
+    for(let i = 0; i < n; i++) {
+        for(let j = 0; j < n; j++) {
+            if (grid[i][j] === EMPTY) {
+                if (Math.random() <= 0.5 || i_random === -1) {
+                    i_random = i;
+                    j_random = j;
+                }
+
+                grid[i][j] = player;
+                
+                rows[i] += toAdd;
+                cols[j] += toAdd;
+
+                if(i === j) {
+                    diags[0] += toAdd;
+                } else if(j == 2 - i) {
+                    diags[1] += toAdd;
+                }
+
+                if (checkWinCondition()) {
+                    HasWon = true;
+                    renderSymbolInCell(player, i, j);
+
+                    setTimeout(function() {
+                        alert(`Победили ${player}`);
+                        }, 250);
+                    return;
+                }
+
+                rows[i] -= toAdd;
+                cols[j] -= toAdd;
+
+                if(i === j) {
+                    diags[0] -= toAdd;
+                } else if(j == 2 - i) {
+                    diags[1] -= toAdd;
+                }
+
+                grid[i][j] = EMPTY;
+            }         
+        }
+    }
+
+    grid[i_random][j_random] = player;
+
+    rows[i_random] += toAdd;
+    cols[j_random] += toAdd;
+
+    if(i_random === j_random) {
+        diags[0] += toAdd;
+    } else if(j_random == 2 - i_random) {
+        diags[1] += toAdd;
+    }
+
+    renderSymbolInCell(player, i_random, j_random);
+
+    if (checkWinCondition()) {
+        HasWon = true;
+        setTimeout(function() {
+                        alert(`Победили ${player}`);
+                        }, 250);
+        return;
+    } 
+}
+
+
 function renderGrid (dimension) {
     container.innerHTML = '';
 
@@ -74,13 +145,19 @@ function cellClickHandler (row, col) {
 
     if(checkWinCondition()) {
         HasWon = true;
-        alert(player);
-    } 
+        setTimeout(function() {
+                alert(`Победили ${player}`);
+                }, 250);
+    } else {
+        smartAI();
+    }
 
 }
 function checkWinCondition() {
     if(movesCount === n * n) {
-        alert('Победила Дружба!');
+        setTimeout(function() {
+                alert('Победила Дружба!');
+                }, 250);
         return false;
     }
 
