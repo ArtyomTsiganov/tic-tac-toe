@@ -2,8 +2,9 @@ const CROSS = 'X';
 const ZERO = 'O';
 const EMPTY = ' ';
 let player = CROSS;
-let n = 3;
-let m = 3;
+
+let n = parseInt(prompt("Введите число строк: "));
+
 let grid = []
 
 let movesCount = 0;
@@ -11,7 +12,7 @@ let HasWon = false;
 
 
 let rows = new Array(n).fill(0)
-let cols = new Array(m).fill(0)
+let cols = new Array(n).fill(0)
 let diags = new Array(2).fill(0)
 
 const container = document.getElementById('fieldWrapper');
@@ -19,7 +20,7 @@ startGame();
 addResetListener();
 
 function startGame () {
-    renderGrid(3);
+    renderGrid(n);
     for(let i = 0; i < n; i++) {
         grid[i] = [];
     }
@@ -43,7 +44,7 @@ function renderGrid (dimension) {
 
 function fillGrid(cellType) {
     for(let i = 0; i < n; i++) {
-        for(let j = 0; j < m; j++) {
+        for(let j = 0; j < n; j++) {
             grid[i][j] = cellType;
         }
     }
@@ -78,25 +79,26 @@ function cellClickHandler (row, col) {
 
 }
 function checkWinCondition() {
-    if(movesCount === m * n) {
+    if(movesCount === n * n) {
         alert('Победила Дружба!');
         return false;
     }
 
     for(const row of rows)
     {
-        if(Math.abs(row) === 3)
+        if(Math.abs(row) === n)
             return true;
     }
 
     for(const col of cols)
     {
-        if(Math.abs(col) === 3)
+        if(Math.abs(col) === n)
             return true;
     }
+
     for(const diag of diags)
     {
-        if(Math.abs(diag) === 3)
+        if(Math.abs(diag) === n)
             return true;
     }
     return false;
