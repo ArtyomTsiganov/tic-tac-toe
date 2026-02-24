@@ -1,9 +1,23 @@
 const CROSS = 'X';
 const ZERO = 'O';
 const EMPTY = ' ';
+let player = CROSS;
+let n = 3;
+let m = 3;
+let grid = []
+
+for(let i = 0; i < rows; i++) {
+    grid[i] = [];
+    for(let j = 0; j < cols; j++) {
+        grid[i][j] = EMPTY;
+    }
+}
+
+let rows = new Array(n).fill(0)
+let cols = new Array(m).fill(0)
+let diags = new Array(2).fill(0)
 
 const container = document.getElementById('fieldWrapper');
-
 startGame();
 addResetListener();
 
@@ -29,13 +43,42 @@ function renderGrid (dimension) {
 function cellClickHandler (row, col) {
     // Пиши код тут
     console.log(`Clicked on cell: ${row}, ${col}`);
+    player = (player === CROSS) ? ZERO : CROSS;
+    renderSymbolInCell(player, row, col);
+    const toAdd = player === CROSS ? 1 : -1;
+    rows[row] += toAdd;
+    cols[col] += toAdd;
+    if(col === row) {
+        diags[0] += toAdd;
+    } else if(col == 2 - row) {
+        diags[1] += toAdd;
+    }
 
+    if(checkWinCondition())
+    {
+        alert(player);
+    }
 
-    /* Пользоваться методом для размещения символа в клетке так:
-        renderSymbolInCell(ZERO, row, col);
-     */
 }
+function checkWinCondition() {
+    for(const row of rows)
+    {
+        if(Math.abs(row) === 3)
+            return true;
+    }
 
+    for(const col of cols)
+    {
+        if(Math.abs(col) === 3)
+            return true;
+    }
+    for(const diag of diags)
+    {
+        if(Math.abs(diag) === 3)
+            return true;
+    }
+    return false;
+}
 function renderSymbolInCell (symbol, row, col, color = '#333') {
     const targetCell = findCell(row, col);
 
