@@ -52,13 +52,14 @@ function smartAI() {
 
                 if(i === j) {
                     diags[0] += toAdd;
-                } else if(j == 2 - i) {
+                } 
+                if(j === n - i) {
                     diags[1] += toAdd;
                 }
 
                 if (checkWinCondition()) {
                     HasWon = true;
-                    renderSymbolInCell(player, i, j);
+                    //renderSymbolInCell(player, i, j);
 
                     setTimeout(function() {
                         alert(`Победили ${player}`);
@@ -71,7 +72,8 @@ function smartAI() {
 
                 if(i === j) {
                     diags[0] -= toAdd;
-                } else if(j == 2 - i) {
+                } 
+                if(j === n - 1 - i) {
                     diags[1] -= toAdd;
                 }
 
@@ -87,7 +89,9 @@ function smartAI() {
 
     if(i_random === j_random) {
         diags[0] += toAdd;
-    } else if(j_random == 2 - i_random) {
+    } 
+
+    if(j_random === n - 1- i_random) {
         diags[1] += toAdd;
     }
 
@@ -144,7 +148,7 @@ function cellClickHandler (row, col) {
     if(col === row) {
         diags[0] += toAdd;
     } 
-    if(col == n - 1 - row) {
+    if(col === n - 1 - row) {
         diags[1] += toAdd;
     }
 
@@ -162,7 +166,11 @@ function cellClickHandler (row, col) {
 
 
 function checkWinCondition() {
-
+    if(movesCount === n * n) {
+        setTimeout(function() {
+            alert(`Победила Дружба!`);
+        }, 250);
+    }
     for (let i = 0; i < n; i++) {
         if (Math.abs(rows[i]) === n) {
             paintWinnerDirection(Direction.ROW, i);
