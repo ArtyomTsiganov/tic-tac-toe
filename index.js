@@ -242,7 +242,6 @@ function resetClickHandler () {
     diags.fill(0);
     fillGrid(EMPTY);
     renderGrid(n);
-    alert('reset!');
 }
 
 function testWin () {
