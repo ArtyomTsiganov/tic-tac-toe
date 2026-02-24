@@ -4,15 +4,11 @@ const EMPTY = ' ';
 let player = CROSS;
 let n = 3;
 let m = 3;
-let movesCount = 0;
 let grid = []
 
-for(let i = 0; i < n; i++) {
-    grid[i] = [];
-    for(let j = 0; j < m; j++) {
-        grid[i][j] = EMPTY;
-    }
-}
+let movesCount = 0;
+let HasWon = false;
+
 
 let rows = new Array(n).fill(0)
 let cols = new Array(m).fill(0)
@@ -24,6 +20,10 @@ addResetListener();
 
 function startGame () {
     renderGrid(3);
+    for(let i = 0; i < n; i++) {
+        grid[i] = [];
+    }
+    fillGrid(EMPTY);
 }
 
 function renderGrid (dimension) {
@@ -41,8 +41,17 @@ function renderGrid (dimension) {
     }
 }
 
+function fillGrid(cellType) {
+    for(let i = 0; i < n; i++) {
+        for(let j = 0; j < m; j++) {
+            grid[i][j] = cellType;
+        }
+    }
+}
 function cellClickHandler (row, col) {
-    // Пиши код тут
+    if(HasWon) {
+        return;
+    }
     console.log(`Clicked on cell: ${row}, ${col}`);
     player = (player === CROSS) ? ZERO : CROSS;
 
@@ -63,6 +72,7 @@ function cellClickHandler (row, col) {
     }
 
     if(checkWinCondition()) {
+        HasWon = true;
         alert(player);
     } 
 
@@ -109,12 +119,18 @@ function addResetListener () {
 }
 
 function resetClickHandler () {
+
+    player = CROSS;
+    movesCount = 0;
+    HasWon = false;
+    rows.fill(0);
+    cols.fill(0);
+    diags.fill(0);
+    fillGrid(EMPTY);
+    renderGrid(n);
     console.log('reset!');
 }
 
-
-/* Test Function */
-/* Победа первого игрока */
 function testWin () {
     clickOnCell(0, 2);
     clickOnCell(0, 0);
@@ -125,7 +141,6 @@ function testWin () {
     clickOnCell(2, 1);
 }
 
-/* Ничья */
 function testDraw () {
     clickOnCell(2, 0);
     clickOnCell(1, 0);
